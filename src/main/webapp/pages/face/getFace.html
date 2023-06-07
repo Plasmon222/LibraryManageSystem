@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <title>js调用摄像头拍照上传图片</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../layui/css/layui.css">
+
+</head>
+<style>
+    .getface {
+        position: absolute;
+        top: 20%;
+        left: 35%;
+
+    }
+
+    .tishi {
+        font-size: 20px;
+
+    }
+</style>
+<body>
+    <div class="input-group mb-xl-3" style="margin-bottom: 10px;margin-top:50px;text-align: center;">
+        <div class="input-group mb-xl-3" id="iflytekLogo"></div>
+        <div class="input-group mb-xl-3" style="margin-top: 10px;height: 30px;">
+            <p id="flag" class="tishi"></p>
+        </div>
+        <div class="input-group mb-xl-3" style="margin-top: 10px;">
+            <video id="video"   width="400px" height="400px" autoplay="autoplay"></video>
+            <canvas id="canvas" width="400px" height="400px" style="display: none;"></canvas>
+            <img id="imgTag" src="" alt="imgTag" style="display: none;">
+        </div>
+    </div>
+</body>
+<script src="../layui/layui.js"></script>
+<script type="text/javascript" src="../asserts/getFace/js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../asserts/getFace/js/getFace.js"></script>

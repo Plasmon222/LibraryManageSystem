@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chun.dao.LendInfoMapper">
+<!--    这是查询全部借阅信息-->
+    <select id="SelectAllLendInfo" resultMap="lend1">
+        SELECT
+            lend_list.id,
+            reader_info.readerNumber,
+            book_info.name,
+            lend_list.backType,
+            book_info.status,
+            lend_list.lendDate,
+            lend_list.backDate
+        FROM
+            lend_list
+                LEFT JOIN	book_info ON lend_list.bookId=book_info.id
+                LEFT JOIN reader_info ON lend_list.readerId=reader_info.id
+        <where>
+            <if test="bookInfo.name!=null and bookInfo.name!=''">
+                and book_info.name=#{bookInfo.name}
+            </if>
+            <if test="readerInfo.readerNumber!=null and readerInfo.readerNumber!=''">
+                and reader_info.readerNumber=#{readerInfo.readerNumber}
+            </if>
+            <if test="bookInfo.status!=null and bookInfo.status!=996">
+                and book_info.status=#{bookInfo.status}
+            </if>
+            <if test="backType!=null and backType!=996">
+                and lend_list.backType=#{backType}
+            </if>
+        </where>
+    </select>
+    <resultMap id="lend1" type="Lend">
+        <id property="id" column="id" />
+        <result property="bookInfo.name" column="name"/>
+        <result property="bookInfo.status" column="status"/>
+        <result property="readerInfo.readerNumber" column="readerNumber"/>
+    </resultMap>
+
+
+<!--    这是查询全部 可借阅 图书信息-->
+    <select id="SelectOneBookInfoStatus" resultMap="canLendBookInfo">
+        SELECT bk.*, ty.name tname
+        FROM book_info bk
+                 LEFT JOIN type_info ty ON bk.type_id = ty.id
+        WHERE bk.status = 0
+    </select>
+    <resultMap id="canLendBookInfo" type="BookInfo">
+        <id property="id" column="id"/>
+        <result property="bookTypeInfo.name" column="tname"/>
+    </resultMap>
+<!--    修改单个图书借阅状态-->
+    <update id="updateOneBookSubmit">
+        UPDATE book_info
+        SET status= 1
+        WHERE id = #{id}
+    </update>
+    <!--    修改多个图书借阅状态2 修改图书信息-->
+    <update id="updateArrBookSubmit2" >
+        UPDATE book_info
+        SET status= 1
+        WHERE id in
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+    <!--    修改多个图书借阅状态3 修改借阅信息-->
+    <insert id="insertArrBookSubmit3" >
+        insert into lend_list(bookId,readerId)
+        values
+        <foreach collection="array" item="ids"  separator=",">
+            (#{ids},#{readerId})
+        </foreach>
+    </insert>
+
+    <!--    修改多个图书借阅状态3.1(list) 修改借阅信息-->
+    <insert id="insertArrBookSubmit4" >
+        insert into lend_list(bookId,readerId,lendDate)
+        values
+        <foreach collection="list" item="ids"  separator=",">
+            (#{ids.bookId},#{ids.readerId},NOW())
+        </foreach>
+    </insert>
+
+<!--    根据借阅id查询借阅信息-->
+    <select id="SelectLendDateByLID" resultType="lend">
+        select *
+        FROM lend_list
+        where id=#{id}
+    </select>
+<!--    根据图书id更新图书状态-->
+    <update id="UpdateBookStatusByBID">
+        update book_info
+        set status=0
+        where id=#{id}
+    </update>
+<!--根据借阅id进行更新借阅信息-->
+    <update id="UpdateBackBookLend">
+        update lend_list
+        set backDate=now(),
+            backType=0
+        where id=#{id}
+    </update>
+
+<!--    根据选中id进行删除借阅-->
+    <delete id="DeleteLend">
+        delete from lend_list
+        where id=#{id}
+    </delete>
+
+<!--    异常还书-->
+    <update id="excBackBook">
+        update lend_list
+        set backType=#{backType},exceptRemarks=#{exceptRemarks}
+        where id=#{id}
+    </update>
+</mapper>

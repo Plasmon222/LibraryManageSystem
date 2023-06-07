@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<title>Signin Template for Bootstrap</title>
+		<!-- Bootstrap core CSS -->
+		<link href="../asserts/css/bootstrap.min.css" rel="stylesheet">
+		<!-- Custom styles for this template -->
+		<link href="../asserts/css/signin.css" rel="stylesheet">
+		<link rel="stylesheet" href="../layui/css/layui.css">
+	</head>
+
+	<body class="text-center">
+		<form class="form-signin" id="myForm">
+			<img class="mb-5" src="../asserts/img/iflytek.png" alt="" width="272" height="72">
+			<h1 class="h3 mb-3 font-weight-normal">刷脸登录</h1>
+			<label class="sr-only">Username</label>
+			<input type="text" class="form-control" id="userToken" required placeholder="UserToken"  autofocus="">
+			<div class="checkbox mb-3"></div>
+
+			<button class="btn btn-lg btn-primary btn-block" id="faceLoginPage" type="submit">刷脸登录</button>
+			<button class="btn btn-lg btn-primary btn-block" id="faceRegistePage" >人脸注册</button>
+			<p class="mt-5 mb-3 text-muted">© 2022-2023</p>
+			<a class="btn btn-sm">中文</a>
+			<a class="btn btn-sm">English</a>
+		</form>
+	</body>
+</html>
+<script src="../layui/layui.js"></script>
+<script type="text/javascript" src="../asserts/getFace/js/jquery-3.4.1.min.js"></script>
+<script>
+	$(function(){
+
+		$("#faceLoginPage").click(function(){
+			console.log("111")
+			let userToken =$("#userToken").val();
+			if(userToken){
+				$("#myForm").submit(function(){
+					return false;
+				})
+				localStorage.setItem("userToken",$("#userToken").val())
+				window.location.href = "/face/jumpGetFace"
+			}
+		})
+		$("#faceRegistePage").click(function(){
+			window.location.href = "/face/jumpTakeFace"
+		})
+	})
+</script>
+

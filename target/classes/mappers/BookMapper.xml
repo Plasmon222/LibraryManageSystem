@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chun.dao.BookInfoMapper">
+    <!--添加模块-->
+    <!--  1、添加图书-->
+    <insert id="AddOneBook" parameterType="bookInfo">
+        INSERT INTO book_info(name, isbn, type_id, author, publish, language, price, publish_date, introduction)
+        VALUES (#{name}, #{isbn}, #{typeId}, #{author}, #{publish}, #{language},
+                #{price}, #{publishDate}, #{introduction})
+    </insert>
+    <!--   2、添加分类-->
+    <insert id="addTypeSubmit" parameterType="bookTypeInfo">
+        INSERT INTO type_info(name, remarks)
+        VALUES (#{name}, #{remarks})
+    </insert>
+
+    <!--  删除模块-->
+    <!--  1、删除一本图书-->
+    <delete id="deleteBook" parameterType="bookInfo">
+        DELETE
+        FROM book_info
+        WHERE id = #{id};
+    </delete>
+    <!--  2、删除分类  -->
+    <delete id="deleteType" parameterType="bookInfo">
+        DELETE
+        FROM type_info
+        WHERE id = #{id};
+    </delete>
+
+    <!--  更新模块-->
+    <!--1、更新图书-->
+    <update id="updateBookSubmit" parameterType="bookInfo">
+        UPDATE book_info
+        SET name=#{name},
+            isbn=#{isbn},
+            type_id=#{typeId},
+            author=#{author},
+            publish=#{publish},
+            language=#{language},
+            price=#{price},
+            publish_date=#{publishDate},
+            introduction= #{introduction}
+        WHERE id = #{id}
+    </update>
+    <!--查询模块-->
+    <!--1、查询所有图书信息-->
+    <select id="SelectAllBookInfo" resultMap="bookinfo2">
+        SELECT bk.*, ty.name tname
+        FROM book_info bk
+        LEFT JOIN type_info ty ON bk.type_id = ty.id
+        <where>
+            <if test="name!=null and name!=''">
+                and bk.name=#{name}
+            </if>
+            <if test="isbn!=null and isbn!=''">
+                and bk.isbn=#{isbn}
+            </if>
+            <if test="typeId!=0">
+                and bk.type_id=#{typeId}
+            </if>
+        </where>
+    </select>
+    <resultMap id="bookinfo2" type="bookInfo">
+        <id property="id" column="id"/>
+        <result property="isbn" column="isbn"/>
+        <result property="name" column="name"/>
+        <result property="bookTypeInfo.name" column="tname"/>
+        <result property="author" column="author"/>
+        <result property="price" column="price"/>
+        <result property="language" column="language"/>
+        <result property="typeId" column="typeId"/>
+    </resultMap>
+    <!--2、查询一条图书信息-->
+    <select id="SelectOneBookInfo" resultType="bookInfo">
+        SELECT *
+        FROM book_info
+        WHERE id = #{id}
+    </select>
+
+
+    <!--2、查询分类信息-->
+    <select id="SelectAllBookTypeInfo" resultType="BookTypeInfo">
+        select *
+        from type_info
+        <where>
+            <if test="name!=null and name!=''">
+                name=#{name}
+            </if>
+        </where>
+    </select>
+    <select id="SelectOneBookTypeInfo" resultType="BookTypeInfo">
+        select *
+        from type_info
+        where id=#{id}
+    </select>
+    <!--    3、更新分类信息-->
+    <update id="updateTypeSubmit">
+        UPDATE type_info
+        SET name=#{name},
+            remarks=#{remarks}
+        WHERE id = #{id}
+    </update>
+
+
+
+</mapper>

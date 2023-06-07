@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chun.dao.AnalysisMapper">
+
+    <select id="typeBook" resultType="Analysis">
+        SELECT
+            type_info.name,
+            count(book_info.id) AS counts
+        FROM
+            book_info
+                LEFT JOIN type_info ON type_info.id = book_Info.type_id
+        GROUP BY
+            type_info.id
+    </select>
+</mapper>

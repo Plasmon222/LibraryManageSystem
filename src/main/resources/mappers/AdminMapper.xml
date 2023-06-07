@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chun.dao.AdminMapper">
+
+
+  <select id="queryUserByNameAndPassword" resultType="Admin">
+    select * from admin where username=#{username} and password=#{password}
+  </select>
+
+  <update id="updatePwdSubmit111" parameterType="admin">
+    UPDATE admin
+    SET password=#{password}
+    WHERE id=#{id}
+  </update>
+
+<!--  查询全部管理员-->
+  <select id="selectAllAdmin" resultType="admin">
+    select *
+    from admin
+  </select>
+<!--  查询一个管理员-->
+  <select id="selectAdminById" resultType="admin">
+    select *
+    from admin
+    where id=#{id}
+  </select>
+<!--  添加管理员-->
+  <insert id="addAdmin">
+    insert into admin(username,password,adminType)
+    values (#{username},#{password},#{adminType})
+  </insert>
+<!--  删除管理员-->
+  <delete id="delAdmin">
+    delete from admin
+    where id=#{id}
+  </delete>
+<!--  更新密码-->
+  <update id="upAdminPassword">
+    update admin
+    set password=#{password}
+    WHERE id=#{id}
+  </update>
+</mapper>

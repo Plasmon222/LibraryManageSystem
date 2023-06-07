@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chun.dao.ReaderInfoMapper">
+
+  <select id="queryUserInfoByNameAndPassword" resultType="ReaderInfo">
+    select * from reader_info where username=#{username} and password=#{password}
+  </select>
+<!--查询全部读者-->
+  <select id="readerAll" parameterType="readerInfo" resultType="ReaderInfo">
+    SELECT * FROM reader_info
+    <where>
+      <if test="readerNumber!=null and readerNumber!=''">
+        and readerNumber=#{readerNumber}
+      </if>
+      <if test="username!=null and username!=''">
+        and username=#{username}
+      </if>
+      <if test="tel!=null and tel!=''">
+        and tel=#{tel}
+      </if>
+    </where>
+  </select>
+<!--  查询一个读者-->
+  <select id="readerOne" resultType="ReaderInfo" >
+  SELECT * FROM reader_info where id=#{id}
+  </select>
+<!--  添加读者-->
+  <insert id="addReaderSubmit" parameterType="readerInfo">
+    INSERT INTO reader_info(readerNumber,username,realName,sex,birthday,tel,email)
+    values (#{readerNumber},#{username},#{realName},#{sex},#{birthday},#{tel},#{email})
+  </insert>
+<!--  删除读者-->
+  <delete id="deleteReader">
+    DELETE FROM   reader_info
+    WHERE id=#{id}
+  </delete>
+<!--  更新一个读者-->
+  <update id="updateReaderSubmit" parameterType="bookInfo">
+    UPDATE reader_info
+    SET readerNumber=#{readerNumber},
+        username=#{username},
+        realName=#{realName},
+        sex=#{sex},
+        birthday=#{birthday},
+        tel=#{tel},
+        email=#{email}
+    WHERE id = #{id}
+  </update>
+<!--  根据读者卡号获取读者信息-->
+  <select id="selectRIDwhereReaderNumber" resultType="ReaderInfo">
+    SELECT * FROM reader_info where readerNumber=#{readerNumber}
+  </select>
+</mapper>
